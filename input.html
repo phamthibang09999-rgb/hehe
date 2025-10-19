@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chúc Quỳnh Anh 20/10 💖</title>
+<style>
+body {
+background: linear-gradient(180deg, #ffe6f2, #ffd6ec);
+height: 100vh;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+overflow: hidden;
+font-family: "Comic Sans MS", cursive;
+text-align: center;
+}
+h1 {
+color: #ff4d6d;
+font-size: 2em;
+animation: fadeIn 3s ease-in-out;
+}
+p {
+color: #ff5c8a;
+font-size: 1.2em;
+max-width: 90%;
+animation: fadeIn 5s ease-in-out;
+}
+img {
+width: 260px;
+border-radius: 20px;
+box-shadow: 0 0 20px rgba(255, 77, 109, 0.6);
+animation: zoomIn 4s ease-in-out;
+}
+@keyframes fadeIn {
+from {opacity: 0;}
+to {opacity: 1;}
+}
+@keyframes zoomIn {
+from {transform: scale(0.6); opacity: 0;}
+to {transform: scale(1); opacity: 1;}
+}
+.heart {
+position: fixed;
+bottom: 0;
+color: #ff4d6d;
+font-size: 20px;
+animation: floatUp 6s linear infinite;
+}
+@keyframes floatUp {
+0% {transform: translateY(0); opacity: 1;}
+100% {transform: translateY(-100vh); opacity: 0;}
+}
+</style>
+</head>
+<body>
+<h1>Chúc Quỳnh Anh zethuwn Ngày 20/10 Zuii zẻ 🩷</h1>
+<img src="https://scontent.fhan5-8.fna.fbcdn.net/v/t39.30808-6/482006252_1184369186631080_8825833777089379864_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_ohc=gyc020l_xPEQ7kNvwEeHD0-&_nc_oc=AdkASw1Kvlv4w0T65huCJTjnonTI2hUmWYeaZSEspGxl3ICGf-8mTzhZfN5f0Hm_1ZY&_nc_zt=23&_nc_ht=scontent.fhan5-8.fna&_nc_gid=VSuK0Fp_xIIF-W_OANJESw&oh=00_AfdKOL6ViwF_9jWgJ2AlxWdpcyOSyzStC8M2bqC-ytSiDQ&oe=68FACD5A" alt="Quỳnh Anh">
+<p>chúc bé iu hạnh phúc xinh đẹp hoài rồi hehe anh iu em 😘💖</p>
+
+<div id="hearts"></div>
+
+<!-- YouTube autoplay -->
+<iframe width="0" height="0" src="https://www.youtube.com/embed/VQgmhkuUygE?autoplay=1&loop=1&playlist=VQgmhkuUygE" frameborder="0" allow="autoplay"></iframe>
+
+<script>
+// tạo hiệu ứng tim bay
+setInterval(() => {
+const heart = document.createElement('div');
+heart.className = 'heart';
+heart.innerText = '💖';
+heart.style.left = Math.random() * 100 + 'vw';
+heart.style.animationDuration = (3 + Math.random() * 3) + 's';
+document.body.appendChild(heart);
+setTimeout(() => heart.remove(), 6000);
+}, 300);
+</script>
+</body>
+</html>
