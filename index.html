@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Devpan Input — Clone (HTML/CSS/JS)</title>
+<style>
+/* Reset */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial}
+body{background:#f1f5f9;color:#0f172a;display:flex;align-items:flex-start;justify-content:center;padding:28px}
+
+.container{width:100%;max-width:1100px;background:#fff;border-radius:12px;box-shadow:0 10px 30px rgba(2,6,23,0.08);overflow:hidden}
+header{display:flex;align-items:center;gap:16px;padding:18px 22px;border-bottom:1px solid #eef2f7}
+.logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,#7c3aed,#06b6d4);display:flex;align-items:center;justify-content:center;color:white;font-weight:700}
+header h1{font-size:18px}
+header p{color:#64748b;font-size:13px}
+
+.grid{display:grid;grid-template-columns:1fr 420px;gap:20px;padding:22px}
+
+/* left form */
+.card{background:#ffffff;border:1px solid #eef2f7;padding:18px;border-radius:10px}
+label{display:block;font-size:13px;color:#334155;margin-bottom:8px}
+input[type='text'], textarea, select{width:100%;padding:10px 12px;border-radius:8px;border:1px solid #e6eef7;background:#fbfdff;font-size:14px}
+textarea{min-height:96px;resize:vertical}
+.row{display:flex;gap:12px}
+.small{flex:0 0 140px}
+.muted{font-size:12px;color:#64748b;margin-top:8px}
+
+.controls{display:flex;gap:10px;margin-top:12px}
+button{padding:10px 14px;border-radius:10px;border:0;background:#0f172a;color:white;cursor:pointer}
+button.secondary{background:#eef2f7;color:#0f172a}
+
+/* right preview */
+.preview{background:linear-gradient(180deg,#f8fafc,#ffffff);border-radius:10px;padding:18px;border:1px solid #eef2f7}
+.card-preview{border-radius:10px;border:1px solid #e6eef7;padding:14px;background:linear-gradient(180deg,#ffffff,#fbfdff)}
+.heart{width:60px;height:60px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:28px}
+.img-preview{width:100%;height:220px;background:#eef2f7;border-radius:8px;background-size:cover;background-position:center;margin-bottom:12px}
+
+.preview h3{font-size:16px;margin-bottom:6px}
+.preview p{color:#475569;font-size:14px}
+
+.music-controls{display:flex;align-items:center;gap:8px;margin-top:10px}
+.link-out{word-break:break-all;background:#0f172a;color:#fff;padding:8px;border-radius:8px;margin-top:10px}
+
+footer{padding:12px 22px;border-top:1px solid #eef2f7;background:#fff;color:#64748b;font-size:13px}
+
+/* responsive */
+@media (max-width:980px){
+.grid{grid-template-columns:1fr;}
+.preview{order:2}
+}
+
+</style>
+</head>
+<body>
+<div class="container" role="main">
+<header>
+<div class="logo">DP</div>
+<div>
+<h1>Devpan Input — Bản clone</h1>
+<p>HTML/CSS/JS — chỉnh nội dung & ảnh dễ dàng, nhạc nền từ URL</p>
+</div>
+</header>
+
+<div class="grid">
+<div>
+<form id="inputForm" class="card" onsubmit="return false">
+<label for="title">Tiêu đề</label>
+<input id="title" type="text" placeholder="Nhập tiêu đề..." value="Gửi tới bạn" />
+
+<div style="height:12px"></div>
+
+<label for="message">Nội dung</label>
+<textarea id="message" placeholder="Viết vài dòng tin nhắn...">Chúc bạn một ngày tuyệt vời!</textarea>
+
+<div style="height:12px"></div>
+
+<label for="images">Links ảnh (mỗi dòng một URL)</label>
+<textarea id="images" placeholder="https://...\nhttps://...">https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e</textarea>
+<div class="muted">Bạn có thể dán nhiều link ảnh, khung preview sẽ lấy ảnh đầu tiên.</div>
+
+<div style="height:12px"></div>
+
+<div class="row">
+<div class="small">
+<label for="color">Màu trái tim</label>
+<input id="color" type="color" value="#ff4d6d" />
+</div>
+
+<div style="flex:1">
+<label for="music">Nhạc nền (URL)</label>
+<input id="music" type="text" placeholder="https://... (mp3/ogg)" value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" />
+<div class="muted">Nhập URL file âm thanh (MP3/OGG). Hỗ trợ stream từ CDN/public URL.</div>
+</div>
+</div>
+
+<div style="height:12px"></div>
+
+<div class="controls">
+<button id="generate">Tạo link</button>
+<button type="button" class="secondary" id="reset">Reset</button>
+<button type="button" class="secondary" id="copyBtn">Copy link</button>
+</div>
+
+<div id="result" class="muted" style="margin-top:10px;display:none"></div>
+</form>
+</div>
+
+<aside>
+<div class="preview">
+<div class="card-preview">
+<div id="imgBox" class="img-preview" style="background-image: url('https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e');"></div>
+<div style="display:flex;align-items:center;gap:12px">
+<div id="heart" class="heart" style="background:#ff4d6d;color:white">❤</div>
+<div style="flex:1">
+<h3 id="previewTitle">Gửi tới bạn</h3>
+<p id="previewMessage">Chúc bạn một ngày tuyệt vời!</p>
+<div class="music-controls">
+<button id="playBtn">▶ Play</button>
+<button id="pauseBtn" style="display:none">⏸ Pause</button>
+<div id="musicLabel" class="muted">Nhạc: SoundHelix-Song-1.mp3</div>
+</div>
+</div>
+</div>
+
+<div id="generatedLink" style="display:none;margin-top:12px">
+<div class="link-out" id="outLink"></div>
+</div>
+</div>
+</div>
+</aside>
+</div>
+
+<footer>
+Mở trang này bằng index.html — đã sẵn sàng để deploy. Muốn đóng gói ZIP hoặc chuyển sang React? Mình làm tiếp.
+</footer>
+</div>
+
+<script>
+// Elements
+const titleEl = document.getElementById('title');
+const messageEl = document.getElementById('message');
+const imagesEl = document.getElementById('images');
+const colorEl = document.getElementById('color');
+const musicEl = document.getElementById('music');
+const generateBtn = document.getElementById('generate');
+const resetBtn = document.getElementById('reset');
+const copyBtn = document.getElementById('copyBtn');
+
+const imgBox = document.getElementById('imgBox');
+const heart = document.getElementById('heart');
+const previewTitle = document.getElementById('previewTitle');
+const previewMessage = document.getElementById('previewMessage');
+const musicLabel = document.getElementById('musicLabel');
+const outLink = document.getElementById('outLink');
+const generatedLink = document.getElementById('generatedLink');
+const result = document.getElementById('result');
+
+let audio = null;
+let currentLink = '';
+
+function updatePreview(){
+previewTitle.textContent = titleEl.value || '...';
+previewMessage.textContent = messageEl.value || '';
+// images
+const imgs = imagesEl.value.split('\n').map(s=>s.trim()).filter(Boolean);
+const first = imgs.length? imgs[0] : '';
+imgBox.style.backgroundImage = first? `url('${first}')` : "none";
+// color
+heart.style.background = colorEl.value;
+// music label
+const mu = musicEl.value.trim();
+if(mu){
+const parts = mu.split('/');
+musicLabel.textContent = 'Nhạc: ' + parts[parts.length-1];
+} else musicLabel.textContent = 'Nhạc: (không)';
+}
+
+// init preview
+updatePreview();
+
+// live update
+[titleEl,messageEl,imagesEl,colorEl,musicEl].forEach(el=>el.addEventListener('input', updatePreview));
+
+generateBtn.addEventListener('click', ()=>{
+// collect data
+const data = {
+title: titleEl.value,
+message: messageEl.value,
+images: imagesEl.value.split('\n').map(s=>s.trim()).filter(Boolean),
+color: colorEl.value,
+music: musicEl.value.trim()
+};
+
+// encode as base64 JSON and append as fragment for easy sharing
+const json = JSON.stringify(data);
+const b64 = btoa(unescape(encodeURIComponent(json)));
+// create link: same page with hash
+const url = location.href.split('#')[0] + '#data=' + b64;
+outLink.textContent = url;
+generatedLink.style.display = 'block';
+result.style.display = 'block';
+result.textContent = 'Link đã tạo — bạn có thể copy và gửi cho người khác.';
+currentLink = url;
+// try copy
+try{navigator.clipboard.writeText(url); result.textContent += ' (Đã copy vào clipboard)';}
+catch(e){}
+});
+
+copyBtn.addEventListener('click', async ()=>{
+if(currentLink){
+try{await navigator.clipboard.writeText(currentLink); alert('Đã copy link!');}
+catch(e){prompt('Copy link thủ công, copy từ ô dưới:', currentLink)}
+} else alert('Chưa có link. Nhấn Tạo link trước.');
+});
+
+resetBtn.addEventListener('click', ()=>{
+titleEl.value = 'Gửi tới bạn';
+messageEl.value = 'Chúc bạn một ngày tuyệt vời!';
+imagesEl.value = 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e';
+colorEl.value = '#ff4d6d';
+musicEl.value = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3';
+updatePreview();
+generatedLink.style.display = 'none';
+result.style.display = 'none';
+currentLink = '';
+});
+
+// audio controls
+const playBtn = document.getElementById('playBtn');
+const pauseBtn = document.getElementById('pauseBtn');
+
+playBtn.addEventListener('click', ()=>{
+const mu = musicEl.value.trim();
+if(!mu){alert('Vui lòng nhập URL nhạc.');return}
+if(audio) {
+audio.pause();
+audio = null;
+}
+audio = new Audio(mu);
+audio.crossOrigin = 'anonymous';
+audio.play().then(()=>{
+playBtn.style.display='none';
+pauseBtn.style.display='inline-block';
+}).catch(err=>{
+alert('Không thể phát nhạc từ URL (CORS hoặc lỗi).\nLỗi: '+err.message);
+audio = null;
+});
+});
+
+pauseBtn.addEventListener('click', ()=>{
+if(audio){audio.pause();audio=null}
+playBtn.style.display='inline-block';
+pauseBtn.style.display='none';
+});
+
+// on load: if hash present, parse
+function loadFromHash(){
+const h = location.hash || '';
+if(!h.includes('data=')) return;
+try{
+const b64 = h.split('data=')[1];
+const json = decodeURIComponent(escape(atob(b64)));
+const obj = JSON.parse(json);
+titleEl.value = obj.title || '';
+messageEl.value = obj.message || '';
+imagesEl.value = (obj.images||[]).join('\n');
+colorEl.value = obj.color || '#ff4d6d';
+musicEl.value = obj.music || '';
+updatePreview();
+// show link area
+currentLink = location.href;
+outLink.textContent = currentLink;
+generatedLink.style.display = 'block';
+result.style.display = 'block';
+result.textContent = 'Đã load từ link.';
+}catch(e){console.error('Invalid data in hash', e)}
+}
+
+window.addEventListener('load', loadFromHash);
+
+</script>
+
+<!-- Auto-load data fragment if missing (pre-filled share data) -->
+<script>
+(function(){
+  try{
+    if(!location.hash.includes('data=')){
+      location.replace(location.pathname + '#data=eyJ0aXRsZSI6IkNow7pjIFF14buzbmggQW5oIHpldGh1d24gTmfDoHkgMjAvMTAgWnVpaSB64bq7Li4gOj4iLCJtZXNzYWdlIjoiY2jDumMgYsOpIGl1IGjhuqFuaCBwaMO6YyB4aW5oIMSR4bq5cCBo4buPaSBy4buPaSBoZWhlIFxuYW5oIGl1IGVtIPCfmJjwn5KWIiwiaW1hZ2VzIjpbImh0dHBzOi8vc2NvbnRlbnQuZmhhbjUtOC5mbmEuZmJjZG4ubmV0L3YvdDM5LjMwODA4LTYvNDgyMDA2MjUyXzExODQzNjkxODY2MzEwODBfODgyNTgzMzc3NzA4OTM3OTg2NF9uLmpwZz9fbmNfY2F0PTEwNiZjY2I9MS03Jl9uY19zaWQ9ODMzZDhjJl9uY19vaGM9Z3ljMDIwbF94UEVRN2tOdndFZUhEMC0mX25jX29jPUFka0FTdzFLdmx2NHcwVDY1aHVDSlRqbm9uVEkyaFVtV1llYVpTRXNwR3hsM0lDR2YtOG1UemhaZk41ZjBIbV8xWlkmX25jX3p0PTIzJl9uY19odD1zY29udGVudC5maGFuNS04LmZuYSZfbmNfZ2lkPXFUTVhtU3Z5bVU1N1NOQ25fa2VBNVEmb2g9MDBfQWZmQnFpZW5Zbzh1UTgxNl9CMGZERmo3NWxib01WV0tCOTR2VE5xUTltR1hhdyZvZT02OEZBQ0Q1QSJdLCJjb2xvciI6IiNmZjRkNmQiLCJtdXNpYyI6Imh0dHBzOi8veW91dHUuYmUvVlFnbWhrdVV5Z0U/c2k9VHY3Q19udllBbV9JWS1fYiJ9');
+    }
+  }catch(e){ console.error(e); }
+})();
+</script>
+
+<!-- YouTube autoplay (attempt) -->
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+function getYouTubeID(url) {
+  if(!url) return null;
+  var m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/))([A-Za-z0-9_-]{11})/);
+  return m ? m[1] : null;
+}
+
+var player;
+function onYouTubeIframeAPIReady() {
+  var frag = location.hash || '';
+  var videoId = null;
+  try{
+    if(frag.includes('data=')){
+      var b64 = frag.split('data=')[1];
+      var json = JSON.parse(decodeURIComponent(escape(atob(b64))));
+      var mu = (json && json.music) ? json.music : '';
+      videoId = getYouTubeID(mu);
+    }
+  }catch(e){ console.error('Error parsing data for YT ID', e); }
+  if(!videoId) videoId = 'VQgmhkuUygE';
+  var div = document.createElement('div');
+  div.id = 'yt-player-container';
+  div.style.position = 'fixed';
+  div.style.right = '12px';
+  div.style.bottom = '12px';
+  div.style.width = '320px';
+  div.style.height = '180px';
+  div.style.zIndex = 9999;
+  div.style.borderRadius = '8px';
+  div.style.overflow = 'hidden';
+  document.body.appendChild(div);
+  player = new YT.Player('yt-player-container', {
+    height: '180',
+    width: '320',
+    videoId: videoId,
+    playerVars: { autoplay: 1, controls: 0, loop: 1, modestbranding: 1, rel: 0, mute: 0, playlist: videoId },
+    events: {
+      'onReady': function(e){ 
+        try{ e.target.playVideo(); }catch(err){console.warn('Autoplay blocked', err);}
+      }
+    }
+  });
+}
+</script>
+
+</body>
+</html>
